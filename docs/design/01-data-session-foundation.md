@@ -1,8 +1,20 @@
 # Design Proposal 01 — Data, Session Identity, Freshness, and Provider Boundaries
 
-> Status: proposed architecture; no production implementation yet  
-> Date: 2026-08-15  
-> Governing principle: first principles, scientific defensibility, auditability, legal compliance, and graceful degradation
+> **Status:** proposed architecture; session ontology refined by Design Proposal 02  
+> **Date:** 2026-08-15  
+> **Governing principle:** first principles, scientific defensibility, auditability, legal compliance, and graceful degradation  
+> **Normative refinement:** for canonical training entities, revision semantics, and plan/actual association, `docs/design/02-canonical-training-ontology.md` takes precedence over Section 4 of this document.
+
+## Amendment after Module 02 audit
+
+The Module 02 audit refined two concepts originally introduced here:
+
+1. `PrescriptionRevision` is replaced by the broader **`PlannedSessionRevision`**, because schedule changes and prescription changes both matter historically.
+2. Association acceptance state and relationship meaning must be separate. `candidate / confirmed / ambiguous / rejected` describe whether a link is accepted; `fulfills / partially_fulfills / replaces / split_part / combined_fulfillment` describe what the link means. `unplanned` and `not_performed` are derived execution states, not association types.
+
+If this document conflicts with Design Proposal 02 on those points, Design Proposal 02 governs.
+
+---
 
 ## 1. Design objective
 
@@ -89,74 +101,32 @@ Never delete a duplicate source record merely because it is not the selected can
 
 ---
 
-## 4. Session model
+## 4. Session model — summary only
 
-### PlannedSession
+The detailed canonical ontology now lives in Design Proposal 02.
 
-Represents an intended training exposure.
-
-Recommended fields:
+The required common entities are:
 
 ```text
-id
-athlete_id
-domain
-scheduled_window
-status
-source_refs
-created_at
+PlannedSession
+PlannedSessionRevision
+PerformedSession
+SessionAssociation
+SessionAssessment
 ```
 
-### PrescriptionRevision
+with source evidence and provenance around them.
 
-A planned session may change before execution. Preserve revisions instead of overwriting history.
+Key rules:
 
-```text
-planned_session_id
-revision
-valid_from
-created_at
-reason
-structured_prescription
-raw_instruction
-source_refs
-```
+- planned-session identity is stable across rescheduling;
+- a revision is immutable historical evidence;
+- a performed session is provider-neutral and may exist with zero work sets;
+- plan/actual association is a first-class entity;
+- facts, associations, assessments, and decisions remain separate;
+- post-hoc edits do not silently replace the historical evaluation baseline.
 
-The prescription used for evaluation should normally be the latest valid approved revision before execution, while earlier revisions remain auditable.
-
-### PerformedSession
-
-Represents a real-world training attempt, including abandoned or partial sessions.
-
-A session can exist with zero completed work sets if meaningful activity, symptoms, or an attempted session occurred.
-
-### SessionAssociation
-
-Explicitly links planned and performed sessions.
-
-Use a general association model even though the common case is 1:1, because real life includes:
-
-- one planned workout split into multiple recordings;
-- one recording covering multiple planned components;
-- rescheduled workouts;
-- replacement workouts;
-- extra/unplanned sessions;
-- abandoned sessions.
-
-Recommended states:
-
-```text
-matched
-candidate
-ambiguous
-replaced
-split
-combined
-unplanned
-not_performed
-```
-
-Each association should store method, confidence, reason codes, and manual override history.
+See `docs/design/02-canonical-training-ontology.md` for normative details.
 
 ---
 
@@ -179,6 +149,8 @@ Do not rely on title text as an authoritative field.
 A candidate match should not become authoritative if competing matches are materially plausible.
 
 Ambiguity should be a valid state and can be resolved by the athlete.
+
+Design Proposal 02 further separates association acceptance state from relationship type.
 
 ---
 
@@ -366,23 +338,31 @@ Keep existing providers but stop adding new provider names to Core.
 
 Preserve current output while building the new model behind it.
 
-### Step C — Move Runna from presentation overlay into canonical plan ingestion
+### Step C — Introduce canonical planned-session revisions
+
+Use stable `PlannedSession` identity and immutable `PlannedSessionRevision` history as defined in Design Proposal 02.
+
+### Step D — Move Runna from presentation overlay into canonical plan ingestion
 
 Keep parser behavior; change architectural position.
 
-### Step D — Replace binary freshness with multidimensional source health
+### Step E — Replace binary freshness with multidimensional source health
 
 Make timestamps and completeness explicit.
 
-### Step E — Introduce global session association
+### Step F — Introduce global session association
 
-Support ambiguity and manual correction.
+Support ambiguity, explicit relationship semantics, and manual correction.
 
-### Step F — Separate runtime data plane from Git deployment pipeline
+### Step G — Separate assessment from canonical facts
+
+Move adherence/outcome interpretation out of the session fact object.
+
+### Step H — Separate runtime data plane from Git deployment pipeline
 
 Keep Git as archive/governance where useful.
 
-### Step G — Add provider-scoped deletion lineage before public external integrations
+### Step I — Add provider-scoped deletion lineage before public external integrations
 
 This is a release requirement, not optional cleanup.
 
@@ -404,7 +384,11 @@ The design is not complete until synthetic tests cover at least:
 10. successful sync but incomplete same-day data;
 11. provider revocation with cascade deletion;
 12. manual correction without destruction of raw evidence;
-13. provider unavailable while another provider still supports the capability.
+13. provider unavailable while another provider still supports the capability;
+14. a post-execution plan edit that cannot retroactively change the historical baseline;
+15. two planned sessions on the same calendar date with distinct stable IDs.
+
+Detailed ontology tests are expanded in Design Proposal 02.
 
 ---
 
@@ -414,4 +398,4 @@ The design is not complete until synthetic tests cover at least:
 
 Preserve the current strengths: raw evidence, append-oriented corrections, conservative Runna parsing, schema validation, fail-closed presentation, provenance, and testing culture.
 
-Replace the fragile boundaries: provider-specific Core authority, presentation overlays that repair canonical state, one-dimensional freshness, independent per-session matching, and Git-as-runtime-data-plane assumptions.
+Replace the fragile boundaries: provider-specific Core authority, presentation overlays that repair canonical state, one-dimensional freshness, independent per-session matching, date/provider-derived canonical identity, embedded plan/actual relationships, presentation-owned domain semantics, and Git-as-runtime-data-plane assumptions.
