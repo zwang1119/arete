@@ -1,11 +1,12 @@
 # ARETE — Project Constitution
 
 > **Status:** Living normative document  
-> **Version:** 0.2.0  
+> **Version:** 0.3.0  
 > **Last updated:** 2026-08-15  
-> **Canonical file:** `ARETE.md`
+> **Canonical file:** `ARETE.md`  
+> **Phase 0 audit:** `docs/audits/phase-0/README.md`
 >
-> **Required reading:** Every developer, reviewer, AI agent, and contributor must read this file before changing ARETE.
+> **Required reading:** Every developer, reviewer, AI agent, and contributor must read this file before materially changing ARETE.
 >
 > **Precedence:** law / licensing / privacy / security → safety → data integrity → scientific validity → auditability → athlete goals → product convenience → visual polish.
 
@@ -15,17 +16,15 @@
 
 ARETE is an evidence-governed, auditable athlete intelligence system for strength, endurance, hybrid training, physique development, recovery, and training-related symptom awareness.
 
-Its purpose is not to collect the most data or reproduce existing fitness platforms. Its purpose is to answer, as reliably as the available evidence and data allow:
+Its purpose is not to collect the most data, maximize engagement, or reproduce existing fitness platforms. Its purpose is to answer, as reliably as available evidence and data permit:
 
 1. What was planned?
 2. What actually happened?
 3. What state is the athlete currently in?
 4. Is there a meaningful deviation, risk, or emerging signal?
-5. Is there credible evidence of progress or regression?
+5. Is there credible evidence of progress, stability, or regression?
 6. Does anything need to change?
 7. Why is ARETE making that conclusion, and how certain is it?
-
-**Core doctrine:**
 
 > **Observe faithfully. Infer cautiously. Decide transparently.**
 
@@ -33,568 +32,822 @@ Its purpose is not to collect the most data or reproduce existing fitness platfo
 
 ## 2. First-principles rule
 
-ARETE is not governed by its legacy implementation, by the preferences of its original user, by another open-source project, by coaching convention, or by an AI suggestion.
+ARETE is not governed by legacy implementation, the preferences of its original user, another open-source project, coaching convention, a popular metric, or an AI suggestion.
 
-For every material feature, metric, rule, data source, or architectural choice, ask:
+For every material feature, rule, metric, data source, or architectural choice ask:
 
 1. What problem are we actually solving?
 2. Does solving it materially help the athlete or protect system integrity?
 3. What is the simplest scientifically defensible solution?
 4. Has the problem already been solved well by a standard, library, or open-source project?
-5. Is that external solution actually suitable for ARETE?
-6. What are its failure modes, maintenance cost, legal constraints, and privacy/security implications?
+5. Is that solution actually appropriate for ARETE?
+6. What are the failure modes, uncertainty, maintenance cost, privacy/security consequences, legal constraints, and opportunity cost?
 7. What happens if we do not build it?
 
-Existing ARETE behavior is evidence about real usage, **not authority**. Existing behavior may be retained, redesigned, or removed when a better solution is found.
+Existing ARETE behavior is evidence about real usage, **not authority**. It may be retained, redesigned, or removed.
 
 ---
 
-## 3. Personal ARETE and the public alpha
+## 3. Personal ARETE and public alpha
 
-### 3.1 Personal ARETE
+### Personal ARETE
 
-The personal ARETE remains a **primary product priority and the richest proving environment**. It is the original motivation for the project and will continue to receive the most complete integrations and personalization.
+The personal ARETE remains a primary product priority and the richest real-world environment. It may have the most integrations and personalization.
 
-However, it is **not the scientific or architectural specification**. Personal providers, schedules, goals, constraints, workflows, and preferences must remain profile/configuration/adapter concerns unless first-principles review shows they belong in the shared core.
+It is **not the scientific or architectural specification**. Personal providers, schedules, goals, constraints, external requirements, injury history, preferences, and workflows remain configuration/adapter/profile concerns unless first-principles review shows that they belong in the shared Core.
 
-### 3.2 Small public version
+### Public alpha
 
-The near-term public version should be deliberately **small and low-friction**, initially intended for approximately 1–3 trusted external users with different training profiles.
+The near-term public version is deliberately small: approximately 1–3 trusted external users with different training profiles.
 
-The goal is not scale, engagement, clinical validation, or proof of performance efficacy. The goal is to discover:
+Its purpose is to expose:
 
-- hidden assumptions from the personal implementation;
+- hidden personal assumptions;
 - data-model failures;
-- poor defaults;
+- matching/reconciliation failures;
+- weak defaults;
 - missing-data failures;
 - provider portability problems;
-- confusing recommendations;
-- unnecessary alerts;
-- technically or scientifically weak logic.
+- incorrect or unclear recommendations;
+- unnecessary/missed attention;
+- privacy/security/integration problems.
 
-The public version should remove personal data and personal-specific constraints, while using the **same evolving ARETE Core**.
+It is **not** evidence that ARETE improves athletic performance, prevents injury, or is clinically valid.
 
-Personal and public versions may differ in data sources, capabilities, user settings, goals, and UI modules. They should not maintain separate scientific definitions of progress or separate decision logic merely for convenience.
+Personal and public versions use the **same evolving ARETE Core**. They may differ in data sources, enabled capabilities, configuration, goals, and UI exposure, but must not maintain separate scientific definitions merely for convenience.
 
-**Core principles should be stable; core implementation must remain correctable.**
+**Core principles should be stable; Core implementation must remain correctable.**
 
 ---
 
-## 4. Golden Rules
+# 4. Golden Rules
 
-### GR-00 — First principles outrank legacy, precedent, and preference
+## GR-00 — First principles outrank legacy, precedent, and preference
 
-A feature is not justified because it already exists, another project uses it, a coach commonly recommends it, an AI suggested it, or it looks good. Material choices require a defensible problem, evidence, feasibility, and failure analysis.
+A feature is not justified because it exists, another project uses it, a coach commonly recommends it, an AI suggested it, or it looks sophisticated.
 
-### GR-01 — Plan and Actual are different facts
+## GR-01 — Facts, relationships, assessments, and decisions are different layers
 
-`PlannedSession` and `PerformedSession` are separate entities linked by an explicit association. Actual activity must never overwrite the historical prescription.
+Canonical flow:
 
-### GR-02 — External apps are sources, not the data model
+```text
+Source evidence
+→ Canonical facts
+→ Associations
+→ Domain assessments
+→ Decisions
+→ Presentation / AI explanation
+```
+
+Facts describe what existed or happened. Associations describe relationships. Assessments describe meaning. Decisions describe what to do next. **None may silently rewrite another.**
+
+## GR-02 — Plan and Actual are different facts
+
+`PlannedSession` and `PerformedSession` are separate entities linked by explicit `SessionAssociation` records. Actual activity never overwrites the historical prescription.
+
+## GR-03 — Date and provider IDs are not canonical identity
+
+ARETE-controlled internal IDs identify canonical entities. Date/time and provider identifiers are properties/references.
+
+Rescheduling a planned session does not automatically create a different intended session. Two sessions on the same date must be able to coexist.
+
+## GR-04 — Historical plan revisions are immutable evidence
+
+Plan changes create `PlannedSessionRevision` records rather than rewriting history.
+
+Historical execution must be assessed against the latest legitimately effective/approved revision available **before execution**. A later edit must never retroactively improve adherence or alter what was genuinely prescribed.
+
+## GR-05 — External apps are evidence sources, not ARETE's ontology
 
 Use:
 
 ```text
-Provider → Adapter → Canonical ARETE Model → Capability → Domain Engine
+Provider → Adapter → Source Record → Canonical Model → Capability → Domain Engine
 ```
 
-Do not architect the product as a collection of app-specific features.
+Domain logic must not depend on whether a user happens to use Xunji, Strava, Runna, Garmin, Apple Health, or another provider.
 
-### GR-03 — Capability detection, not app detection
+## GR-06 — Capability detection, not app detection
 
-ARETE should determine what it can reliably answer from available data. Missing integrations should remove unsupported capabilities, not make the whole product unusable.
+ARETE asks what it is qualified to answer from available data. Missing integrations reduce capabilities; they do not make the entire product unusable.
 
-### GR-04 — Minimum viable data must still produce value
+## GR-07 — Minimum viable data must still produce value
 
-A strength athlete with exercise, sets, reps, load, and date should already obtain meaningful strength analysis. Additional RPE/RIR, body weight, recovery data, plans, and symptoms should improve the answer rather than become arbitrary prerequisites.
+A strength athlete with exercise/sets/reps/load/date or a runner with basic activity files can already receive appropriately limited analysis. More data expand capability; they do not license stronger claims unless they are actually relevant and reliable.
 
-### GR-05 — Every important datum has provenance
+## GR-08 — Every important datum has provenance
 
-Where relevant, distinguish `measured`, `reported`, `imported`, `estimated`, `derived`, and `inferred`. Important data should retain source, timestamp, method, quality, and confidence.
-
-### GR-06 — Canonical calculations have one source of truth
-
-A metric should be computed once in an authoritative domain module and reused by UI, reports, rules, and AI. Do not reimplement the same formula in multiple surfaces.
-
-### GR-07 — Do not collapse different training modalities into fake precision
-
-Strength and endurance should retain separate domain semantics. Do not create a universal training-load or hybrid-load score without compelling validation.
-
-### GR-08 — No universal readiness score by default
-
-Sleep, HRV, pain, soreness, local muscular fatigue, illness, and psychological fatigue are different signals. Prefer multidimensional state assessment over one visually attractive but weak composite score.
-
-### GR-09 — Goal hierarchy matters
-
-Goals should be expressible as `Primary`, `Secondary`, `Maintenance`, and `Constraint`. Conflicting training decisions must respect goal priority and hard constraints.
-
-### GR-10 — Evidence is not policy
-
-Distinguish:
+Where relevant distinguish:
 
 ```text
-Evidence → Interpretation → Policy → Executable Rule
+measured
+reported
+imported
+estimated
+derived
+inferred
+vendor-derived
+```
+
+Important facts retain source, time, method, measurement regime, quality, and lineage.
+
+## GR-09 — Do not select one global provider winner
+
+One real-world session may have multiple source observations. Canonical values may use different sources for different fields, with field-level lineage. Duplicate source evidence is reconciled, not silently deleted.
+
+## GR-10 — Canonical calculations have one source of truth
+
+A derived metric is computed once in its authoritative domain module and reused by UI, reports, rules, and AI. Presentation code must not repair or independently reinterpret canonical truth.
+
+## GR-11 — Missing, ambiguous, partial, and provisional are legitimate states
+
+Never convert unknown to zero, normal, completed, or missed merely to simplify UI.
+
+If a required input is absent, return `not_applicable`, `insufficient_data`, `unknown`, or an equivalent explicit state.
+
+## GR-12 — Freshness is multidimensional
+
+Transport success is not data completeness. Distinguish at least as needed:
+
+```text
+last attempt
+last successful read
+coverage / observed-through
+completeness
+finality
+presentation/decision calculation time
+```
+
+A green “updated” state must not imply data are complete when they are merely recently checked.
+
+## GR-13 — Do not collapse different training modalities into fake precision
+
+Strength, endurance, recovery, symptoms, and physique retain their own scientific semantics. Do not create a universal training-load, quality, fatigue, readiness, or hybrid-load score without compelling validation.
+
+## GR-14 — No universal readiness score
+
+Sleep, HRV, resting HR, subjective fatigue, local soreness, psychological readiness, illness, and recent training exposure are distinct observations. Recovery is multidimensional and task-relevant.
+
+## GR-15 — Goal hierarchy matters
+
+Goals must support:
+
+```text
+Primary
+Secondary
+Maintenance
+```
+
+Hard constraints are modeled separately. Conflicting decisions protect the primary goal's key outcomes subject to safety and real-world constraints.
+
+## GR-16 — Evidence is not policy, and policy is not a rule
+
+Scientific chain:
+
+```text
+ScientificReference
+→ EvidenceReview
+→ EvidenceClaim
+→ ImplementationPolicy
+→ ExecutableRule
+→ Decision
 ```
 
 A scientific association does not automatically justify a software threshold.
 
-### GR-11 — Evidence quality, data quality, and decision confidence are different
+## GR-17 — Population evidence does not automatically justify individual prescription
 
-Do not collapse evidence certainty, data completeness, measurement quality, and decision confidence into one score.
+Group effects inform prior knowledge and policy. They do not prove that an individual athlete's current state was caused by a specific exposure or that a population threshold should become a personal command.
 
-### GR-12 — Population evidence does not automatically justify individual prescription
+Consider applicability, effect magnitude, within-person variability, measurement error, alternatives, uncertainty, and costs of false positives/false negatives.
 
-Group means, associations, and risk relationships can inform an individual decision but must not be converted directly into personal commands without considering applicability, within-person variability, measurement reliability, uncertainty, effect size, alternatives, and the consequences of acting.
+## GR-18 — Evidence certainty, applicability, data quality, and decision confidence are separate
 
-### GR-13 — Deterministic authority before generative explanation
+Do not collapse:
+
+```text
+scientific evidence certainty
+population applicability
+data completeness
+data quality/measurement reliability
+decision confidence
+```
+
+into one unexplained score.
+
+## GR-19 — Numeric thresholds disclose what they are
+
+Every executable threshold/rule should be classified, for example:
+
+```text
+evidence_supported
+consensus_or_best_practice
+product_safety_policy
+user_specific_policy
+experimental
+```
+
+A number does not acquire scientific authority because it exists in configuration or code.
+
+## GR-20 — Deterministic authority before generative explanation
 
 Preferred flow:
 
 ```text
-validated data → derived state → rules → decision → reason codes/confidence → AI explanation
+validated data
+→ domain assessment
+→ rule evaluation
+→ decision
+→ reason codes/confidence
+→ AI explanation
 ```
 
-AI may explain, summarize, contextualize, and identify candidate structured information. It must not silently invent thresholds, missing facts, citations, provenance, diagnoses, or authoritative metrics.
+AI may explain, summarize, contextualize, extract candidate facts, and propose candidate actions. It must not silently invent thresholds, citations, diagnoses, missing facts, authoritative metrics, source precedence, or historical state.
 
-### GR-14 — Consequential recommendations are auditable
+## GR-21 — AI is replaceable and Core remains useful without it
 
-Important recommendations should be reconstructable from inputs, timestamps, rule/evidence versions, missing data, confidence, precedence, and overrides.
+AI failure or model change must not stop ingestion, canonical state, deterministic decisions, or basic Athlete/Coach views.
 
-### GR-15 — Rule conflicts require formal precedence
+Imported/user text is untrusted data, not instructions that can redefine ARETE policy or authority.
 
-A preliminary hierarchy is:
+## GR-22 — Consequential recommendations are auditable
 
-```text
-Legal/security
-→ Safety/significant symptoms
-→ Hard athlete constraints
-→ Primary-goal protection
-→ Plan integrity
-→ Recovery/fatigue modification
-→ Progression opportunity
-→ Optimization/convenience
-```
-
-Conflict behavior must be tested rather than left to an LLM.
-
-### GR-16 — Symptoms are not just another recovery input
-
-Pain, sharp pain, illness, neurological symptoms, and other important health signals require their own domain and precedence. ARETE may support conservative training modification but must not pretend to diagnose disease or injury.
-
-### GR-17 — Progress claims require an evidence gate
-
-One good session is not automatically improvement. Distinguish observation, candidate signal, emerging signal, established improvement, stable, possible regression, and insufficient comparable data.
-
-### GR-18 — Physique conclusions require appropriate evidence
-
-Training progression alone does not prove hypertrophy. Prefer combinations of body-weight trend, standardized circumference, standardized photos when voluntarily provided, training exposure, and performance trend. Consumer body-fat estimates require explicit uncertainty.
-
-### GR-19 — Attention is scarce
-
-Athlete-facing alerts should appear only when information is likely to change current or next-step behavior. Detailed evidence belongs in Coach/Audit views.
-
-### GR-20 — Missing data is a valid state
-
-If optional inputs are absent, use a reduced-information pathway with calibrated confidence. If required inputs are absent, return `not_applicable` or `insufficient_data`, never a guessed result.
-
-### GR-21 — User autonomy is preserved
-
-ARETE advises; the athlete controls the plan. Significant automatic modifications require explicit justification, reversibility, and audit history. Original plans remain recoverable.
-
-### GR-22 — Decisions and their context are longitudinal evidence
-
-Important training decisions are not disposable chat output. Where they materially affect training, preserve:
+Important decisions retain sufficient information to reconstruct:
 
 ```text
 what was known
-what was uncertain
-what was planned
-what decision was made
-why it was made
-which rule/evidence version was used
-what the athlete actually did
-what happened afterwards
+what was missing/uncertain
+which goals/constraints applied
+which rules/policies/evidence versions applied
+candidate actions where material
+selected action
+confidence
+precedence/overrides
+what the athlete did
+what happened later
 ```
 
-This history can later help evaluate the athlete and ARETE itself. Retrospective patterns must not automatically become causal rules.
+Do not store hidden model chain-of-thought as the audit mechanism. Structured facts/reasons/versions are the audit trail.
+
+## GR-23 — No change is a legitimate coaching decision
+
+`maintain` is a successful outcome when modification is not sufficiently justified. ARETE must not change training merely to appear useful.
+
+Prefer the smallest intervention that solves the identified problem while preserving intended stimulus.
+
+## GR-24 — Decision and plan mutation are different authority levels
+
+```text
+DecisionRecord
+→ PlanMutationRequest
+→ validation / authority / conflict checks
+→ user confirmation when required
+→ new PlannedSessionRevision
+```
+
+No AI, UI component, provider adapter, or ordinary domain rule may bypass this pathway.
+
+## GR-25 — User autonomy is preserved
+
+The athlete controls the plan. User overrides are recorded as evidence, not automatically labeled poor adherence. Original plan revisions remain recoverable.
+
+## GR-26 — Symptoms are a separate safety domain, not merely a recovery score input
+
+Track symptom observations/episodes/trajectory/function without inventing diagnoses. Safety can override progression when materially relevant, but should constrain only the relevant exposure when possible.
+
+A pain cutoff or similar threshold must be identified as evidence-supported, condition-specific, product-policy, or user-specific rather than presented as a universal clinical law.
+
+## GR-27 — Progress claims are question-specific and measurement-aware
+
+There is no universal number of sessions/days that transforms an observation into improvement.
+
+A `ProgressClaim` must identify:
+
+```text
+what question is being answered
+what observations are comparable
+measurement regime/reliability
+meaningful-change/evidence gate where appropriate
+period
+context/confounders
+confidence/limitations
+```
+
+One good session is not automatically progress.
+
+## GR-28 — Physique conclusions require appropriate evidence
+
+Training progression does not prove hypertrophy. Bodyweight, standardized circumference, standardized photos when voluntarily provided, validated composition methods, and performance/training context are different evidence streams.
+
+Consumer body-fat estimates and cross-device body-composition changes must not be given unjustified precision.
+
+## GR-29 — Attention is scarce
+
+Athlete-facing alerts appear only when information is likely to alter current or next-step behavior. Persistent issues use stable AttentionEpisode identity rather than becoming a new alert after every refresh.
+
+Coach Lens may expose substantially more evidence and uncertainty.
+
+## GR-30 — Decision history is longitudinal evidence, not automatic causality
+
+The sequence:
+
+```text
+Decision → Athlete action → Outcome
+```
+
+is valuable evidence about the athlete and ARETE. Repeated personal patterns can inform future decisions, but retrospective association does not automatically become a causal or universal rule.
+
+## GR-31 — Privacy/security/compliance are Core correctness
+
+Training, recovery, symptom, body, wearable, and photo data may be sensitive personal information.
+
+Design for purpose limitation, data minimization, user access/export/correction/delete, retention, secure storage/transport, least privilege, source/provider deletion lineage, privacy-conscious logging, and multi-user isolation.
+
+Provider terms and jurisdiction-specific obligations are release requirements, not documentation cleanup.
+
+## GR-32 — Athlete data are not an advertising asset
+
+ARETE should not sell athlete health/training data or use them for targeted advertising. Provider-specific restrictions such as Apple Health rules may be even stricter and must be followed.
+
+## GR-33 — Public alpha tests correctness/generalization, not efficacy
+
+The first external users validate whether Core can support different capabilities without personal assumptions. Early success metrics prioritize data/matching/calculation/rule integrity, explanation quality, false/missed attention, privacy, and security—not engagement.
+
+## GR-34 — Scientific behavior is regression-tested
+
+Material ruleset changes must be run against standardized athlete scenarios. Every decision change is categorized as:
+
+```text
+expected unchanged
+intentional change
+unexpected change
+```
+
+A release has no unresolved unexpected scientific-behavior changes.
+
+## GR-35 — Serious failures become tests or invariants
+
+When a bug reveals a class of failure, add a regression fixture/invariant when feasible. Critical invariants include plan/actual separation, anti-hindsight history, unknown-not-zero, association authority, safety precedence, AI mutation boundaries, tenant isolation, and provider deletion lineage.
 
 ---
 
-## 5. Canonical system model
+# 5. Canonical model direction
 
-The provider-neutral model should evolve around concepts such as:
+The canonical model should evolve around provider-neutral concepts such as:
 
 ```text
 Athlete
-Goal / Constraint
-TrainingPlan / PlannedSession / Prescription
-PerformedSession / SessionAssociation / SessionAssessment
-Exercise / ExerciseAlias / SetPerformance
-RecoveryObservation / SleepObservation / SymptomObservation
-BodyMeasurement / PhysiqueObservation
-DerivedMetric
-EvidenceRecord / Rule / Decision / Recommendation
-SourceRecord / ImportEvent / AuditEvent
+Goal
+Constraint
+TrainingPlan
+PlannedSession
+PlannedSessionRevision
+PerformedSession
+SessionAssociation
+SessionAssessment
+
+SourcePlanRecord
+SourceObservation
+SourceDependency
+CorrectionEvent
+
+ExerciseDefinition
+ExerciseConfiguration
+SetPrescription
+SetPerformance
+
+EndurancePrescription
+EnduranceSegmentObservation
+ZoneModel
+SensorCoverage
+
+RecoveryObservation
+RecoveryAssessment
+MeasurementRegime
+
+SymptomObservation
+SymptomEpisode
+SymptomAssessment
+
+BodyMeasurement
+MeasurementProtocol
+ProgressQuestion
+ProgressClaim
+
+ScientificReference
+EvidenceReview
+EvidenceClaim
+ImplementationPolicy
+ExecutableRule
+
+DecisionContext
+DecisionRecord
+PlanMutationRequest
+AuditEvent
 ```
 
-This is a starting model, not a frozen schema. Cross-cutting schema changes require an architecture decision record (ADR).
+This is a design direction, not a frozen database schema. Cross-cutting schema decisions require ADRs and migration/invariant tests.
 
 ---
 
-## 6. Domain responsibilities
+# 6. Domain responsibilities
 
-### Strength
+## Strength
 
-Exercise identity, sets/reps/load, RPE/RIR where available, equipment/variation, laterality, comparable exposures, strength trends, progression eligibility, and muscle/movement exposure.
+Represent exercise/configuration, set-level performance, load semantics, RPE/RIR where available, comparison context, goal-specific performance trends, and progression decisions.
 
-Do not equate simple volume load with total stimulus. Do not infer hypertrophy from training logs alone.
+Do not equate `sets × reps × kg` with total stimulus. Do not create a universal binary “effective set.” Do not infer hypertrophy from lifting performance alone.
 
-### Endurance
+## Endurance
 
-Time, distance, pace/speed, HR/power where available, laps/intervals, elevation, explicit zone derivation, plan-versus-actual execution, volume/intensity trends, race/test performance, and scientifically defensible longitudinal metrics.
+Represent time/distance/pace, HR/power where available, structured intervals, environment/sensor context, versioned zone methods, plan execution, internal/external load descriptors, performance tests, and longitudinal evidence classes.
 
-Do not expose a metric simply because another endurance platform exposes it.
+Constraints are not targets. Execution and physiological response are different questions. Do not hard-code a universal polarized/80-20 distribution.
 
-### Hybrid
+## Recovery
 
-Coordinate domains rather than erase them: goal priority, scheduling, local overlap, high-intensity clustering, interference considerations, key-session protection, recovery time, and competing progression demands.
+Represent sleep, autonomic observations, subjective fatigue, local soreness/fatigue, psychological readiness, illness, and measurement regime. Prefer athlete-/method-specific baselines where defensible.
 
-### Recovery
+## Symptoms
 
-Sleep, HRV, resting HR, subjective fatigue, soreness, illness, and recent exposure may inform decisions. Prefer athlete-specific baselines where defensible and avoid overreacting to isolated noisy signals.
+Represent location, side, severity, quality, provoking task, trajectory, functional impact, recurrence, modification, and original report. Allow conservative training decisions without diagnostic claims.
 
-### Symptoms
+## Hybrid
 
-Track location, severity, quality, provoking movement, timing, trend, functional effect, and notes. Allow conservative training logic; avoid diagnosis.
+Coordinate domain demands using goal priority, session importance, timing, intensity, local overlap, symptoms, and acute-vs-chronic conflict. Do not create a universal Hybrid Load Score.
 
-### Physique
+## Progress / Physique
 
-Use body-weight trend, standardized measurements, optional standardized photos, body-composition estimates with uncertainty, training exposure, and performance trends.
+Progress is claim-specific. Measurement reliability, comparability and standardized protocols determine what can be concluded. Stable performance may be success under a maintenance goal.
 
 ---
 
-## 7. Evidence governance
+# 7. Open-source development doctrine
 
-Rules that materially change training should link to structured evidence records where feasible.
+ARETE should actively study strong open-source projects so mature engineering problems are not repeatedly solved in isolation. External projects are references, not authorities.
 
-Each evidence record should identify:
+Current references include Coach Watts, GoldenCheetah, Section 11, wger, Endurain, workout.cool, and Dreeve.
 
-- claim;
-- target population;
-- relevant outcome;
-- evidence summary;
-- certainty and rationale;
-- implementation implication;
-- limitations;
-- references/identifiers;
-- last review date;
-- review status.
+For each material problem:
 
-Before converting research into an executable rule, ask:
+```text
+First-principles problem definition
+→ current ARETE audit
+→ open-source/standard review
+→ scientific review where relevant
+→ alternatives/failure/license/maintenance comparison
+→ ARETE design decision
+→ ADR/design documentation
+→ tests
+```
+
+### Reuse levels
+
+**Level 1 — Concept/design inspiration**  
+Learn an abstraction/workflow and independently design ARETE's solution.
+
+**Level 2 — Independent implementation from specification/evidence**  
+Implement a standard/algorithm/scientific method independently with provenance and tests.
+
+**Level 3 — Direct dependency**  
+Use a mature library after maintenance, security, license, and compatibility review.
+
+**Level 4 — Source reuse/adaptation**  
+Copy/adapt source only with compelling reason and explicit exact-license, attribution, compatibility, provenance, maintenance, and release review.
+
+Until a deliberate compatibility decision says otherwise:
+
+> **Do not copy, line-by-line translate, or adapt GPL/AGPL code into ARETE Core.**
+
+---
+
+# 8. Evidence governance
+
+A scientific reference is not an executable rule.
+
+Each important evidence review should identify:
+
+```text
+question
+population
+intervention/exposure/comparator
+outcome
+main findings/effect uncertainty
+limitations
+population applicability
+measurement limitations
+certainty
+what it supports
+what it does not support
+review date/status
+```
+
+Before converting evidence into policy ask:
 
 1. Is the population relevant?
 2. Is the endpoint relevant?
 3. Is the evidence causal or associative?
 4. Is the magnitude practically meaningful?
-5. Is it replicated and sufficiently consistent?
-6. Is the measurement reliable enough for an individual decision?
+5. Is it replicated/consistent?
+6. Is measurement reliable enough for an individual decision?
 7. Has the proposed threshold actually been validated?
-8. Does the rule improve a decision compared with doing nothing?
-9. What is the cost of a false positive?
-10. What is the cost of a false negative?
+8. Does acting improve the decision versus doing nothing?
+9. What is the cost of false positive action?
+10. What is the cost of false negative inaction?
 
-Scientific rules should be versioned. Historical decisions should retain the ruleset/evidence version under which they were made.
+ARETE may use A/B/C/D/U as an internal certainty shorthand, but it is **not formal GRADE** and must never be represented as such.
+
+Evidence, policies, and rules are versioned. Historical decisions retain the versions under which they were made.
 
 ---
 
-## 8. Standing on the shoulders of open source
+# 9. Public-user and integration doctrine
 
-ARETE should actively study high-quality open-source projects so that it does not repeatedly solve mature engineering problems in isolation. External projects are references, not authorities.
+Normal users should never need GitHub knowledge.
 
-Current areas of interest include:
+GitHub contains code, schemas, evidence, rules, tests, ADRs, and synthetic fixtures. Hosted user data belongs in an appropriate user-scoped runtime datastore.
 
-- **Coach Watts:** canonical domain logic, repositories, integrations, background processing, AI/domain separation;
-- **GoldenCheetah:** planned-versus-actual semantics and endurance analysis;
-- **Section 11:** deterministic/auditable decision protocols;
-- **wger:** strength data modeling and progression abstractions;
-- **Endurain:** provider adapters and ingestion/normalization;
-- **workout.cool:** modular frontend/domain organization;
-- **Dreeve:** activity automation and analytics concepts.
+Integrations are adapters. Support standard/user-controlled import formats where appropriate so ARETE does not depend exclusively on third-party APIs.
 
-For each problem use:
+For every provider document:
 
 ```text
-First-principles problem definition
-→ current ARETE audit
-→ open-source/reference review
-→ scientific review where relevant
-→ alternative/failure/license/maintenance comparison
-→ ARETE design decision
-→ documentation
-→ tests
+permitted access method
+auth/scopes
+storage/retention terms
+deletion/revocation requirements
+rate limits/webhooks
+redistribution/display restrictions
+commercial/branding restrictions
+terms review date/version
 ```
 
-### Four reuse levels
+No unsupported scraping, credential sharing, or assumption that publicly accessible data are freely reusable.
 
-**Level 1 — Concept/design inspiration**  
-Learn the abstraction or workflow, then implement an ARETE-specific solution.
-
-**Level 2 — Independent implementation from specification/evidence**  
-Implement a standard, algorithm, or scientific method independently from an appropriate source with provenance and tests.
-
-**Level 3 — Direct dependency**  
-Use a mature library for a generic technical problem after maintenance, security, and license review.
-
-**Level 4 — Source reuse/adaptation**  
-Copy/adapt code only with a compelling reason and explicit review of exact license, attribution, compatibility, provenance, maintenance, and release consequences. This is the highest-friction option, not the default.
-
-The quality of a source project does not exempt its scientific assumptions from review. Scientific merit does not exempt an implementation from engineering review.
+Provider-derived data must support lineage sufficient for required correction/deletion/re-canonicalization.
 
 ---
 
-## 9. Public-user architecture
+# 10. Legal, privacy, security, and medical boundary
 
-The end user should not need GitHub knowledge.
+Legal compliance is a release criterion.
 
-GitHub should contain source code, schemas, rules, evidence, tests, documentation, and ADRs. A hosted web application should use an appropriate datastore for user data.
+### Licensing/provenance
 
-Integrations should be adapters, for example:
+No external code, text, dataset, media, exercise library, prompt library, or other copyrighted material enters ARETE without known provenance and reuse rights.
 
-```text
-xunji / strava / garmin / apple-health / intervals / fit / tcx / gpx / csv / manual
-```
-
-Domain engines must not directly call provider APIs.
-
-Manual and standard-file import remain important fallbacks because third-party APIs can change or disappear.
-
-ARETE must expect duplicate representations of one real-world workout and reconcile them without deleting provenance.
-
----
-
-## 10. Legal, licensing, privacy, and compliance
-
-Legal compliance is a release criterion, not an afterthought.
-
-### Third-party material
-
-No external code, text, dataset, media, exercise library, prompt library, or other copyrighted material enters ARETE unless origin and reuse rights are known.
-
-Record source, URL, exact version/commit, license/terms, type of use, required attribution, verification date, and reviewer.
-
-Until formal compatibility review is complete:
-
-> **Do not copy, line-by-line translate, or adapt GPL/AGPL code into ARETE Core.**
-
-Such projects may still be studied for concepts and architecture.
-
-### License direction
-
-A permissive OSI-approved license is preferred for original ARETE code; Apache-2.0 is a leading candidate, not a final decision. Before first public release perform a dependency/license inventory, third-party provenance review, compatibility review, and automated license scan, then create the final `LICENSE` and any required notices.
-
-### APIs
-
-Use official/permitted provider access methods. Review authentication, scopes, storage/retention, deletion, rate limits, branding, redistribution, commercial restrictions, and terms. Do not build production integrations on unsupported scraping or credential sharing.
+Before first public release perform dependency/license inventory, provenance review, compatibility review, and required notices. A permissive OSI-approved license remains preferred; Apache-2.0 is a leading candidate, not a final decision.
 
 ### Secrets
 
-Never commit API keys, OAuth secrets, tokens, certificates, production credentials, or personal datasets.
+Never commit API keys, OAuth secrets, access/refresh tokens, certificates, production credentials, or personal datasets.
 
-### Sensitive data
+### Multi-user security
 
-Assume training, recovery, symptom, wearable, and body data may be sensitive personal information. Use data minimization, clear purpose, export/delete controls, appropriate retention, secure transport/storage, least privilege, and privacy-conscious logging.
+Server-side authorization and tenant isolation apply to every user-owned object and background job. UI filtering is never the security boundary.
 
-### Medical boundary
+Use mature authentication/security primitives; do not invent custom cryptography.
 
-Initial public ARETE is training/general-wellness software, not diagnostic or therapeutic software. Do not claim to diagnose, treat, cure, mitigate, or prevent disease or injury. Intended use and actual functionality matter more than disclaimers.
+### Privacy
 
----
-
-## 11. Testing doctrine
-
-ARETE requires:
-
-- **unit tests** for calculations, conversions, matching, mappings;
-- **integration tests** for provider → canonical data and duplicate reconciliation;
-- **rule tests** for deterministic decisions;
-- **conflict tests** for precedence;
-- **scientific regression tests** comparing ruleset versions on standard athlete cases;
-- **UI contract tests** for stale data, missing capabilities, attention noise, and uncertainty communication.
-
-A rule update should explicitly show expected unchanged decisions, intentional changes, and unexpected changes.
-
----
-
-## 12. Early external testing
-
-The initial external cohort should be deliberately heterogeneous, for example:
-
-1. **strength-only** athlete with a lifting log;
-2. **endurance-only** athlete with one endurance source;
-3. **simple hybrid** athlete with strength + endurance but fewer data sources than the personal implementation.
-
-The personal ARETE acts as a high-data stress case, not as the universal specification.
-
-Early alpha success metrics are primarily:
-
-- data integrity;
-- matching integrity;
-- calculation integrity;
-- rule integrity;
-- explanation clarity;
-- false attention;
-- missed important attention;
-- portability across users/providers.
-
-A useful error taxonomy should include:
+Design for:
 
 ```text
-DATA / MATCHING / DOMAIN / SCIENCE / RULE / PRECEDENCE / AI / UX / INTEGRATION / SECURITY
+clear purpose/notice
+data minimization
+per-integration scope
+access/export
+correction
+deletion
+retention
+cross-border/processor review
+least privilege
+privacy-conscious logging
 ```
 
-One to three users can expose architecture and usability failures. They cannot establish clinical validity or prove performance benefit.
+Real personal data and secrets never enter public tests/documentation.
+
+### Health/general-wellness boundary
+
+Initial ARETE is training/general-wellness software, not diagnostic or therapeutic software. Do not claim to diagnose, treat, cure, mitigate, prevent, or rule out disease/injury.
+
+A disclaimer does not override actual intended use/functionality. Clinical expansion requires a new jurisdiction-specific regulatory review.
 
 ---
 
-## 13. Development sequence
+# 11. Athlete Lens, Coach Lens, and AI
 
-### Phase 0 — First-principles audit
+## Athlete Lens
 
-- audit the personal ARETE without assuming current behavior is correct;
-- inventory rules, metrics, source precedence, decisions, and dependencies;
-- identify personal-only assumptions;
-- compare material subsystems with strong references;
-- identify unsupported scientific logic, technical debt, and rule conflicts;
-- preserve useful historical decisions and rationale.
+Answer the next useful questions with minimum noise:
 
-### Phase 1 — Canonical core
+```text
+What should I do today?
+Did anything important change?
+How did the last session go?
+What is next?
+Is there credible progress?
+```
 
-Define canonical entities, provenance, capabilities, source reconciliation, freshness semantics, synthetic fixtures, and tests.
+Capabilities determine navigation. Missing modules do not generate empty dashboard noise.
 
-### Phase 2 — Evidence and rules
+## Coach Lens
 
-Define evidence schema, rule schema, precedence, decision/audit objects, ruleset versioning, and scientific regression tests.
+Prefer the structure:
 
-### Phase 3 — Strength and endurance packs
+```text
+Observed
+Interpreted
+Decided
+Alternatives
+Unknown / limitations
+```
 
-Build the two domains independently with provider-neutral contracts.
+with drill-down to source/evidence/rules.
 
-### Phase 4 — Hybrid coordination
+## AI
 
-Add goal hierarchy, scheduling, local overlap, key-session protection, and conflict logic without collapsing modalities into one score.
+AI gets compact task-relevant canonical context and approved evidence summaries. Material free-text extraction produces candidate structured facts that pass validation/confirmation policy.
 
-### Phase 5 — Recovery, symptoms, and physique
-
-Add only where data and evidence justify useful decisions.
-
-### Phase 6 — AI layer
-
-Add explanation, summarization, coach dialogue, and candidate note extraction after authoritative core outputs are stable.
-
-### Phase 7 — Small public web alpha
-
-Add authentication, multi-user isolation, privacy/security controls, provider setup, data export/delete, and the minimum UX needed for a few trusted users.
-
-Scale only if the small version is genuinely useful, scientifically defensible, maintainable, and legally safe.
+AI cannot directly mutate plan/history or invent scientific authority.
 
 ---
 
-## 14. Decision records and accumulated evidence
+# 12. Testing and release doctrine
 
-Important decisions should receive an ADR or durable decision record when they affect architecture, scientific behavior, data semantics, legal posture, or user-facing recommendations.
+ARETE requires layered testing including:
 
-An ADR should include:
+```text
+unit
+schema/contracts
+provider adapters
+canonicalization/reconciliation
+plan-actual association
+domain engines
+rule/precedence conflicts
+scientific regression
+privacy/deletion
+multi-user authorization/security
+AI validation boundary
+UI/accessibility
+schema migration/decision replay
+license/provenance/supply-chain checks
+```
 
-- context/problem;
-- alternatives considered;
-- decision;
-- reasons;
-- evidence/references;
-- consequences and trade-offs;
-- migration implications;
-- date and version.
+Critical invariants should have explicit IDs/tests.
 
-Training decisions generated by ARETE should likewise retain enough context to later evaluate whether the decision was sensible and what happened afterwards.
+A material ruleset release produces a decision diff across standardized synthetic athlete scenarios. Intentional changes reference the evidence/policy/ADR that justified them.
 
-This accumulated history is valuable evidence, but it must be analyzed cautiously. Personal historical success is not automatically a universal rule.
+Operational observability uses minimized structured metadata; general logs should not contain raw workout notes, symptom narratives, photos, route geometry, or tokens by default.
+
+A public release requires independent gates:
+
+```text
+Engineering
+Scientific
+Privacy / security / legal / licensing
+```
+
+All must pass.
 
 ---
 
-## 15. Definition of Done
+# 13. Development sequence after Phase 0
+
+Phase 0 audit is documented in `docs/audits/phase-0/README.md` and its linked design proposals.
+
+When production development resumes, preferred dependency order is:
+
+```text
+1. Governance scaffolding
+   ADRs / evidence registry / ruleset versioning / provenance
+
+2. Canonical foundation
+   IDs / source records / plan revisions / performed sessions / association / source health
+
+3. Runtime data plane
+   user-scoped storage / ingestion / deletion lineage / replay
+
+4. Strength Engine
+
+5. Endurance Engine
+
+6. ProgressClaim framework
+
+7. Goals + Decision Engine
+
+8. Symptoms + Recovery
+
+9. Hybrid coordination
+
+10. Athlete / Coach presentation contracts
+
+11. AI explanation/extraction
+
+12. Public-alpha hardening
+```
+
+This order is a dependency-oriented recommendation, not a ban on delivering incremental value to the personal ARETE. Changes require ADR justification when they alter cross-cutting architecture.
+
+---
+
+# 14. Definition of Done
 
 A material feature is not done because it renders correctly. Where applicable it must have:
 
+- first-principles problem justification;
 - canonical data-model compliance;
-- provenance;
-- plan/actual integrity;
-- declared capability requirements;
-- missing/stale-data behavior;
-- rule/evidence linkage;
-- calibrated confidence;
-- conflict/precedence handling;
-- audit trail;
-- unit/integration/rule/conflict tests;
+- provenance/lineage;
+- Plan/Actual/history integrity;
+- declared capabilities and data requirements;
+- missing/ambiguous/stale/partial behavior;
+- measurement/claim limitations;
+- evidence → policy → rule traceability where scientific behavior changes;
+- goal/constraint/precedence handling;
+- DecisionRecord/auditability;
+- unit/integration/domain/rule/conflict tests;
 - scientific regression coverage when behavior changes;
-- privacy/security review;
-- licensing/API-term review;
-- no secrets or real personal data in the public repository;
-- claims no stronger than evidence;
-- low-noise Athlete experience;
-- updated documentation.
+- privacy/security impact review;
+- provider API terms and licensing/provenance review;
+- no secrets or real personal data in public repository/tests;
+- user-facing claims no stronger than evidence;
+- Athlete Lens remains low-noise;
+- documentation/ADR updated;
+- plan mutation follows its governed pathway.
 
 ---
 
-## 16. Things ARETE should deliberately avoid
+# 15. Things ARETE deliberately avoids
 
-Unless future evidence overturns the decision:
+Unless future evidence/ADR overturns the decision:
 
-- building a Strava-style social network;
-- building maps or charts without decision value;
-- universal readiness scoring;
-- universal hybrid-load scoring;
-- automatic clinical diagnosis;
-- opaque AI coaching;
-- replacing history with regenerated state;
-- treating one noisy biomarker as authoritative;
-- claiming progress from one observation;
-- requiring a large wearable ecosystem;
-- making GitHub part of the normal user workflow;
-- hard-coding the original user's schedule, goals, injuries, apps, or preferences into Core;
-- copying third-party code merely because it is public;
+- Strava-style social-network scope;
+- charts/maps without decision value;
+- universal readiness/fatigue/quality scores;
+- universal hybrid-load scores;
+- automatic diagnosis or treatment claims;
+- opaque AI coaching authority;
+- historical state rewritten by current logic;
+- one noisy biomarker treated as truth;
+- generic fixed progress thresholds across domains;
+- training-log-only hypertrophy claims;
+- universal “effective set” truth;
+- universal 80/20 endurance compliance;
+- unnecessary wearable dependence;
+- GitHub as normal end-user workflow/runtime database;
+- provider-specific assumptions embedded in Core;
+- third-party code copied merely because it is public;
 - unsupported API access;
-- storing secrets in source control;
-- feature creep that does not improve athlete decisions.
+- secrets/personal data in source control;
+- feature creep that does not improve decisions or system integrity.
 
 ---
 
-## 17. North Star
+# 16. North Star
 
-The immediate strategy is:
+Immediate strategy:
 
-> **Use first principles, high-quality evidence, and the strongest relevant open-source ideas to improve the personal ARETE; then expose the same core through a small, low-friction public alpha with personal data and personal-specific integrations/configuration separated from the shared system.**
+> **Use first principles, high-quality evidence, and the strongest relevant open-source ideas to improve the personal ARETE; continuously distill genuinely general capabilities into the same ARETE Core; expose that Core through a small, low-friction public alpha with personal data and personal assumptions separated from the shared system.**
 
-The public alpha is intentionally not a mass-market product. If 1–3 external users with different training profiles can use the same core without hidden personal assumptions, that is meaningful architectural evidence. Expansion comes later, only if justified.
-
-ARETE should become valuable not because it knows everything, but because it knows:
+ARETE succeeds not because it knows everything, but because it knows:
 
 > **what it knows, what it does not know, how strongly it knows it, and whether that information should change what the athlete does next.**
 
 ---
 
-## 18. Maintenance rule
+# 17. Maintenance rule
 
 `ARETE.md` is a living constitution.
 
 When changing it:
 
 1. explain why a core principle changes;
-2. check architecture implications;
-3. check scientific implications;
-4. check privacy/security/legal/licensing implications;
-5. update version/date;
-6. prefer explicit amendment over silent drift;
-7. preserve durable ADRs for major decisions.
+2. preserve the previous rationale through ADR/history rather than silent drift;
+3. check architecture implications;
+4. check scientific implications;
+5. check privacy/security/legal/licensing implications;
+6. update version/date;
+7. update affected scientific-regression scenarios/invariants;
+8. keep detailed implementation design in `docs/design/` rather than bloating the constitution.
 
-Every future development session should begin with:
+Every future development session begins with:
 
 > **Read `ARETE.md`; define the problem from first principles; identify the governing rules; inspect current code/data; review relevant evidence and references; only then propose implementation.**
+
+---
+
+## v0.3.0 amendment note
+
+Version 0.3.0 consolidates the completed Phase 0 audits. It does not intentionally reverse the v0.2.0 project direction. It strengthens previously implicit principles, especially:
+
+- facts / associations / assessments / decisions separation;
+- stable provider-neutral identity;
+- immutable plan revisions and anti-hindsight assessment;
+- provider field-level lineage and multidimensional freshness;
+- explicit rule classes for policy thresholds;
+- claim-specific progress gates;
+- DecisionRecord vs PlanMutationRequest separation;
+- multidimensional recovery and symptom-episode modeling;
+- AI authority boundaries;
+- public-alpha privacy/security requirements;
+- scientific regression and release governance.
