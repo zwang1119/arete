@@ -1,7 +1,8 @@
 # Design Proposal 08 — Progress & Physique Engine
 
 > Status: proposed architecture; no production implementation yet  
-> Date: 2026-08-15
+> Date: 2026-08-15  
+> Physique implementation roadmap: `15-physique-checkin-roadmap.md`
 
 ## 1. Objective
 
@@ -119,6 +120,8 @@ pump/training status
 ```
 
 ARETE should initially treat photos as user-visible qualitative evidence. Automated body-composition inference should not ship without independent validation, privacy review and evidence governance.
+
+The V2 capture, longitudinal visual-assessment, open-source dependency, AI-boundary and V3 research rules for physique photos are defined in `15-physique-checkin-roadmap.md`.
 
 ### Body composition
 
